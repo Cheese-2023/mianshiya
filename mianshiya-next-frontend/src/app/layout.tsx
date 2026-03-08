@@ -1,7 +1,7 @@
 "use client";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import BasicLayout from "@/layouts/BasicLayout";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Provider, useDispatch } from "react-redux";
 import store, { AppDispatch } from "@/stores";
 import { getLoginUserUsingGet } from "@/api/userController";
@@ -20,30 +20,23 @@ const InitLayout: React.FC<
   }>
 > = ({ children }) => {
   const dispatch = useDispatch<AppDispatch>();
-  // 初始化全局用户状态
-  const doInitLoginUser = useCallback(async () => {
-    const res = await getLoginUserUsingGet();
-    if (res.data) {
-      // 更新全局用户状态
-      dispatch(setLoginUser(res.data));
-    } else {
-      // 仅用于测试
-      // setTimeout(() => {
-      //   const testUser = {
-      //     userName: "测试登录",
-      //     id: 1,
-      //     userAvatar: "https://www.code-nav.cn/logo.png",
-      //     userRole: ACCESS_ENUM.ADMIN
-      //   };
-      //   dispatch(setLoginUser(testUser));
-      // }, 3000);
-    }
-  }, []);
-
-  // 只执行一次
+  // 初始化全局用户状态（只在客户端首屏执行一次）
   useEffect(() => {
-    doInitLoginUser();
-  }, []);
+    const initLoginUser = async () => {
+      try {
+        const res = await getLoginUserUsingGet();
+        if (res.data) {
+          // 更新全局用户状态
+          dispatch(setLoginUser(res.data));
+        }
+      } catch (error) {
+        // 失败时仅记录日志，避免打断页面渲染
+        console.error("获取当前登录用户失败", error);
+      }
+    };
+
+    void initLoginUser();
+  }, [dispatch]);
   return children;
 };
 
