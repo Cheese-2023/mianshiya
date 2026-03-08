@@ -1,23 +1,24 @@
 "use client";
-import {Avatar, Card, Col, Row, Segmented, Tag} from "antd";
-import {useSelector} from "react-redux";
-import {RootState} from "@/stores";
+import { Avatar, Card, Col, Row, Segmented, Tag } from "antd";
+import { useSelector } from "react-redux";
+import { RootState } from "@/stores";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
-import {useState} from "react";
+import { useState } from "react";
 import CalendarChart from "@/app/user/center/components/CalendarChart";
 import "./index.css";
 import UserInfo from "@/app/user/center/components/UserInfo";
 import UserInfoEditForm from "@/app/user/center/components/UserInfoEditForm";
-import {USER_ROLE_ENUM, USER_ROLE_TEXT_MAP} from "@/constants/user";
+import { USER_ROLE_ENUM, USER_ROLE_TEXT_MAP } from "@/constants/user";
 import dayjs from "dayjs";
 
 /**
  * 用户中心页面
- * @constructor
+ *
+ * 展示当前登录用户的基础信息、刷题记录以及后续可扩展的个人功能模块。
  */
 export default function UserCenterPage() {
-  // 获取登录用户信息
+  // 从全局状态中获取当前登录用户
   const loginUser = useSelector((state: RootState) => state.loginUser);
   // 便于复用，新起一个变量
   const user = loginUser;
@@ -51,9 +52,13 @@ export default function UserCenterPage() {
             <Paragraph type="secondary" style={{ marginTop: 8 }}>
               注册日期：{dayjs(user.createTime).format("YYYY-MM-DD")}
             </Paragraph>
-            <Paragraph type="secondary" style={{ marginTop: 8 }} copyable={{
-              text: user.id
-            }}>
+            <Paragraph
+              type="secondary"
+              style={{ marginTop: 8 }}
+              copyable={{
+                text: user.id,
+              }}
+            >
               我的 id：{user.id}
             </Paragraph>
           </Card>

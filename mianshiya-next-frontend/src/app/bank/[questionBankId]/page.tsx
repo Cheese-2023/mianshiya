@@ -1,5 +1,5 @@
 "use server";
-import { Avatar, Button, Card, message } from "antd";
+import { Avatar, Button, Card } from "antd";
 import { getQuestionBankVoByIdUsingGet } from "@/api/questionBankController";
 import Meta from "antd/es/card/Meta";
 import Paragraph from "antd/es/typography/Paragraph";
@@ -8,12 +8,13 @@ import QuestionList from "@/components/QuestionList";
 import "./index.css";
 
 /**
- * 题库详情页
- * @constructor
+ * 题库详情页（服务端渲染）
+ *
+ * 展示单个题库的基本信息和题目列表，并提供「开始刷题」按钮直接跳转到第一道题。
  */
-export default async function BankPage({ params }) {
+export default async function BankPage({ params }: { params: { questionBankId: number } }) {
   const { questionBankId } = params;
-  let bank = undefined;
+  let bank: API.QuestionBankVO | undefined;
 
   try {
     const res = await getQuestionBankVoByIdUsingGet({
@@ -23,8 +24,8 @@ export default async function BankPage({ params }) {
       pageSize: 200,
     });
     bank = res.data;
-  } catch (e) {
-    console.error("获取题库详情失败，" + e.message);
+  } catch (error) {
+    console.error("获取题库详情失败", error);
   }
 
   // 错误处理
@@ -33,7 +34,7 @@ export default async function BankPage({ params }) {
   }
 
   // 获取第一道题目，用于 “开始刷题” 按钮跳转
-  let firstQuestionId;
+  let firstQuestionId: number | undefined;
   if (bank.questionPage?.records && bank.questionPage.records.length > 0) {
     firstQuestionId = bank.questionPage.records[0].id;
   }

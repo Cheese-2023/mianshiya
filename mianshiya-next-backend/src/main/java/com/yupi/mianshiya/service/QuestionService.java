@@ -14,8 +14,8 @@ import java.util.List;
 /**
  * 题目服务
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://www.code-nav.cn">编程导航学习圈</a>
+ * 负责题目的核心业务处理，如数据校验、查询组装、ES 搜索、封装 VO 对象、批量操作等，
+ * Controller 层只做参数校验和结果包装，具体业务都在该接口的实现类中沉淀。
  */
 public interface QuestionService extends IService<Question> {
 
